@@ -54,7 +54,7 @@ namespace MyMouseController {
         #region Public Method
         public void setup(HotKeyHelper helper) {
             helper.setup(this.cMenu.Handle);
-            helper.Register(ModifierKeys.Control | ModifierKeys.Shift | ModifierKeys.Alt, Key.I, (_, __) => {
+            helper.Register(ModifierKeys.Control | ModifierKeys.Shift, Key.OemSemicolon, (_, __) => {
                 this.cMenu_Start.PerformClick();
             });
         }
@@ -65,7 +65,7 @@ namespace MyMouseController {
             _notifyIcon.Icon = Icon.ExtractAssociatedIcon(Assembly.GetExecutingAssembly().Location);
             _notifyIcon.BalloonTipClosed += (s, e) => _notifyIcon.Visible = false;
         }
-
+        
         private void showToast(string message) {
             _notifyIcon.Visible = true;
             _notifyIcon.ShowBalloonTip(3000, "MyMouseController", message, ToolTipIcon.Info);
