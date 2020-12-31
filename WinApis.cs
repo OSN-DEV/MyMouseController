@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Runtime.InteropServices;
 using Accessibility;
+using System.Windows;
 
 namespace MyMouseController {
     public static class WinApis {
@@ -28,6 +29,9 @@ namespace MyMouseController {
             [DllImport("User32.dll")]
             public static extern bool SetCursorPos(int X, int Y);
 
+            [DllImport("User32.dll")]
+            public static extern bool GetCursorPos(out POINT lppoint);
+
             [DllImport("user32.dll")]
             public static extern bool GetWindowRect(IntPtr hwnd, ref Rect rectangle);
         }
@@ -40,6 +44,15 @@ namespace MyMouseController {
             public int Top { get; set; }
             public int Right { get; set; }
             public int Bottom { get; set; }
+        }
+
+        [StructLayout(LayoutKind.Sequential)]
+        public struct POINT {
+            public int X { get; set; }
+            public int Y { get; set; }
+            public static implicit operator Point(POINT point) {
+                return new Point(point.X, point.Y);
+            }
         }
 
         [Flags]

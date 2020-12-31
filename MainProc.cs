@@ -1,9 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Runtime.InteropServices;
-using System.Text;
-using System.Threading.Tasks;
 using static MyMouseController.WinApis;
 
 namespace MyMouseController {
@@ -43,7 +39,6 @@ namespace MyMouseController {
                     throw new InvalidOperationException("Already started");
                 }
 
-
                 _hook = WinApis.NativeMethods.SetWinEventHook(SetWinEventHookEventType.EVENT_SYSTEM_FOREGROUND,
                     SetWinEventHookEventType.EVENT_SYSTEM_FOREGROUND, IntPtr.Zero,
                     (SetWinEventHookDelegate)_handleHook.Target,
@@ -55,10 +50,6 @@ namespace MyMouseController {
                 }
 
                 _isStarted = true;
-
-                //if (Started != null) {
-                //    Started(this, EventArgs.Empty);
-                //}
             }
         }
 
@@ -84,7 +75,7 @@ namespace MyMouseController {
                 _disposed = null;
 
                 if (disposing) {
-                    //dispose managed resources
+                    // dispose managed resources
                 }
 
                 //dispose unmanaged resources
@@ -108,13 +99,16 @@ namespace MyMouseController {
             lock (_lock) {
                 var rect = new WinApis.Rect();
                 if (WinApis.NativeMethods.GetWindowRect(window, ref rect)) {
+                    POINT pt;
+                    if (WinApis.NativeMethods.GetCursorPos(out pt)) {
+                        if (rect.Left <= pt.X && pt.X <= rect.Right &&
+                            rect.Top <= pt.Y && pt.Y <= rect.Bottom) {
+                            return;
+                        }
+                    }
+
                     var x = rect.Left + (rect.Right - rect.Left) / 2;
                     var y = rect.Top + (rect.Bottom - rect.Top) / 2;
-
-                    //Console.WriteLine(rect.Top + " : " + rect.Bottom);
-                    //Console.WriteLine(rect.Left + " : " + rect.Right);
-                    //Console.WriteLine(x + " : " + y);
-                    //Console.WriteLine("--------------------------------------------");
                      WinApis.NativeMethods.SetCursorPos(x, y);
                 }
             }
