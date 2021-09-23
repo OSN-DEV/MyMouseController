@@ -27,8 +27,6 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MyMouseControllerMain));
             this.cNotify = new System.Windows.Forms.NotifyIcon(this.components);
             this.cMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
-            this.cMenu_Start = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.cMenu_Exit = new System.Windows.Forms.ToolStripMenuItem();
             this.cMenu.SuspendLayout();
             // 
@@ -42,24 +40,10 @@
             // cMenu
             // 
             this.cMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.cMenu_Start,
-            this.toolStripSeparator1,
             this.cMenu_Exit});
             this.cMenu.Name = "cMenu";
             this.cMenu.Size = new System.Drawing.Size(99, 54);
-            this.cMenu.ItemClicked += new System.Windows.Forms.ToolStripItemClickedEventHandler(this.cMenu_ItemClicked);
-            // 
-            // cMenu_Start
-            // 
-            this.cMenu_Start.CheckOnClick = true;
-            this.cMenu_Start.Name = "cMenu_Start";
-            this.cMenu_Start.Size = new System.Drawing.Size(98, 22);
-            this.cMenu_Start.Text = "Start";
-            // 
-            // toolStripSeparator1
-            // 
-            this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(95, 6);
+            this.cMenu.ItemClicked += new System.Windows.Forms.ToolStripItemClickedEventHandler(this.MenuItemClicked);
             // 
             // cMenu_Exit
             // 
@@ -73,8 +57,6 @@
         #endregion
         private System.Windows.Forms.NotifyIcon cNotify;
         private System.Windows.Forms.ContextMenuStrip cMenu;
-        private System.Windows.Forms.ToolStripMenuItem cMenu_Start;
-        private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
         private System.Windows.Forms.ToolStripMenuItem cMenu_Exit;
     }
 }

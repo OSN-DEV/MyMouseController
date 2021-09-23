@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Configuration;
-using System.Data;
-using System.Linq;
-using System.Threading.Tasks;
-using System.Windows;
+﻿using System.Windows;
 
 namespace MyMouseController {
     /// <summary>
@@ -27,7 +21,7 @@ namespace MyMouseController {
             this.ShutdownMode = ShutdownMode.OnExplicitShutdown;
             this._hotkey = new HotKeyHelper();
             this._controller = new MyMouseControllerMain();
-            this._controller.setup(this._hotkey);
+            this._controller.Setup(this._hotkey);
         }
 
         /// <summary>

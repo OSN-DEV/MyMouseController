@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Runtime.InteropServices;
+using System.Diagnostics;
 using static MyMouseController.WinApis;
 
 namespace MyMouseController {
@@ -8,11 +8,8 @@ namespace MyMouseController {
         // https://github.com/ambyte/GlobalCaretPosition
 
         #region Declaration
-        private bool _isStarted;
-        private object _lock;
+        private readonly object _lock;
         private bool? _disposed;
-        private IntPtr _hook;
-        private GCHandle _handleHook;
         #endregion
 
 
@@ -25,51 +22,61 @@ namespace MyMouseController {
 
         #region Constructor
         public MainProc() {
-            _isStarted = false;
             _lock = new object();
             _disposed = false;
-            _handleHook = GCHandle.Alloc(new SetWinEventHookDelegate(HandleHook));
         }
         #endregion
 
         #region Public Method
-        public void Start() {
-            lock (_lock) {
-                if (_isStarted) {
-                    throw new InvalidOperationException("Already started");
-                }
+        /// <summary>
+        /// カーソルを移動
+        /// </summary>
+        /// <param name="isCenter">true:ウィンドウの中央に移動、false:ウィンドウの右上に移動</param>
+        public void MoveCursor(bool isCenter) {
+            IntPtr window = GetActiveProcess();
 
-                _hook = WinApis.NativeMethods.SetWinEventHook(SetWinEventHookEventType.EVENT_SYSTEM_FOREGROUND,
-                    SetWinEventHookEventType.EVENT_SYSTEM_FOREGROUND, IntPtr.Zero,
-                    (SetWinEventHookDelegate)_handleHook.Target,
-                    0, 0,
-                    SetWinEventHookFlag.WINEVENT_OUTOFCONTEXT | SetWinEventHookFlag.WINEVENT_SKIPOWNPROCESS);
-
-                if (_hook == IntPtr.Zero) {
-                    throw new Exception("Unable to set event hook:" + Marshal.GetLastWin32Error());
-                }
-
-                _isStarted = true;
+            if (_disposed != false) {
+                return;
             }
-        }
 
-        public void Stop() {
             lock (_lock) {
-                if (!_isStarted) {
-                    throw new InvalidOperationException("Already stopped");
+                var rect = new WinApis.Rect();
+                if (!WinApis.NativeMethods.GetWindowRect(window, ref rect)) {
+                    return; 
+                }
+                System.Diagnostics.Debug.WriteLine($"Rect {rect.Left}:{rect.Right}");
+
+                // 既にカーソルがアクティブウィンドウ内にある場合は何もせず
+                if (WinApis.NativeMethods.GetCursorPos(out POINT pt)) {
+                    System.Diagnostics.Debug.WriteLine($"Mouse Pos {pt.X}:{pt.Y}");
+
+                    if (isCenter && rect.Left <= pt.X && pt.X <= rect.Right &&
+                        rect.Top <= pt.Y && pt.Y <= rect.Bottom) {
+                        System.Diagnostics.Debug.WriteLine("Do not move");
+                        return;
+                    }
                 }
 
-                if (!WinApis.NativeMethods.UnhookWinEvent(_hook)) {
-                    throw new Exception("Unable to remove event hook:" + Marshal.GetLastWin32Error());
+                if (isCenter) {
+                    var x = rect.Left + (rect.Right - rect.Left) / 2;
+                    var y = rect.Top + (rect.Bottom - rect.Top) / 2;
+                    WinApis.NativeMethods.SetCursorPos(x, y);
+                    System.Diagnostics.Debug.WriteLine($"Move Center x;{x}, y:{y}");
+                } else {
+                    var x = rect.Right - 25;
+                    var y = rect.Top + 10;
+                    WinApis.NativeMethods.SetCursorPos(x, y);
+                    System.Diagnostics.Debug.WriteLine($"Move Right x;{x}, y:{y}");
                 }
-
-                _isStarted = false;
-
             }
         }
         #endregion
 
         #region Private Method
+        /// <summary>
+        /// 後処理
+        /// </summary>
+        /// <param name="disposing"></param>
         private void Dispose(bool disposing) {
             if (_disposed == false) {
                 _disposed = null;
@@ -78,40 +85,25 @@ namespace MyMouseController {
                     // dispose managed resources
                 }
 
-                //dispose unmanaged resources
                 lock (_lock) {
-                    if (_isStarted) {
-                        WinApis.NativeMethods.UnhookWinEvent(_hook);
-                    }
+                    //dispose unmanaged resources
                 }
-                _handleHook.Free();
-
                 _disposed = true;
             }
         }
 
-        private void HandleHook(IntPtr hook, SetWinEventHookEventType eventType,
-            IntPtr window, int objectId, int childId, uint threadId, uint time) {
-            if (_disposed != false) {
-                return;
-            }
+        /// <summary>
+        /// アクティブウィンドウのハンドルを取得する
+        /// </summary>
+        /// <returns>アクティブウィンドウのハンドル</returns>
+        private IntPtr GetActiveProcess() {
+            //IntPtr hWnd = WinApis.NativeMethods.GetForegroundWindow();
 
-            lock (_lock) {
-                var rect = new WinApis.Rect();
-                if (WinApis.NativeMethods.GetWindowRect(window, ref rect)) {
-                    POINT pt;
-                    if (WinApis.NativeMethods.GetCursorPos(out pt)) {
-                        if (rect.Left <= pt.X && pt.X <= rect.Right &&
-                            rect.Top <= pt.Y && pt.Y <= rect.Bottom) {
-                            return;
-                        }
-                    }
-
-                    var x = rect.Left + (rect.Right - rect.Left) / 2;
-                    var y = rect.Top + (rect.Bottom - rect.Top) / 2;
-                     WinApis.NativeMethods.SetCursorPos(x, y);
-                }
-            }
+            //WinApis.NativeMethods.GetWindowThreadProcessId(hWnd, out int id);
+            //Process process = Process.GetProcessById(id);
+            //System.Diagnostics.Debug.WriteLine($"process {process.ProcessName}");
+            //return process.Handle;
+            return WinApis.NativeMethods.GetForegroundWindow();
         }
         #endregion
     }

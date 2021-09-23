@@ -9,6 +9,7 @@ using System.Windows;
 
 namespace MyMouseController {
     public static class WinApis {
+
         #region Declaration - Dll
         public static class NativeMethods {
             // internal static Guid IID_IAccessible = new Guid(1636251360, (short)15421, (short)4559, (byte)129, (byte)12, (byte)0, (byte)170, (byte)0, (byte)56, (byte)155, (byte)113);
@@ -34,6 +35,12 @@ namespace MyMouseController {
 
             [DllImport("user32.dll")]
             public static extern bool GetWindowRect(IntPtr hwnd, ref Rect rectangle);
+
+            [DllImport("user32.dll")]
+            public static extern IntPtr GetForegroundWindow();
+
+            [DllImport("user32.dll")]
+            public static extern int GetWindowThreadProcessId(IntPtr hWnd, out int lpdwProcessId);
         }
 
         public delegate void SetWinEventHookDelegate(IntPtr hook, SetWinEventHookEventType eventType,
