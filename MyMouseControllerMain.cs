@@ -44,6 +44,12 @@ namespace MyMouseController {
             helper.Register(ModifierKeys.Control | ModifierKeys.Shift, Key.X, (_, __) => {
                 MoveCursor(false);
             });
+            helper.Register(ModifierKeys.Control | ModifierKeys.Alt, Key.Left, (_, __) => {
+                MoveCursorToOtherScreen(false);
+            });
+            helper.Register(ModifierKeys.Control | ModifierKeys.Alt, Key.Right, (_, __) => {
+                MoveCursorToOtherScreen(true);
+            });
         }
         #endregion
 
@@ -54,6 +60,14 @@ namespace MyMouseController {
         /// <param name="isCenter">true:ウィンドウの中央に移動、false:ウィンドウの右上に移動</param>
         private void MoveCursor(bool isCenter) {
             this._proc.MoveCursor(isCenter);
+        }
+    
+        /// <summary>
+        /// カーソルを別のモニタに移動
+        /// </summary>
+        /// <param name="isRight">ture:右のモニタに移動、false:左のモニタに移動</param>
+        private void MoveCursorToOtherScreen(bool isRight) {
+            this._proc.MoveCursorToOtherScreen(isRight);
         }
         #endregion
     }
