@@ -1,6 +1,7 @@
 ﻿using System.ComponentModel;
 using System.Windows.Forms;
 using System.Windows.Input;
+using static MyMouseController.MainProc;
 using Application = System.Windows.Application;
 
 namespace MyMouseController {
@@ -50,6 +51,33 @@ namespace MyMouseController {
             helper.Register(ModifierKeys.Control | ModifierKeys.Alt, Key.Right, (_, __) => {
                 MoveCursorToOtherScreen(true);
             });
+            helper.Register(ModifierKeys.Control | ModifierKeys.Alt, Key.U, (_, __) => {
+                SimpleMoveCursor(MoveDirection.LeftTop);
+            });
+            helper.Register(ModifierKeys.Control | ModifierKeys.Alt, Key.I, (_, __) => {
+                SimpleMoveCursor(MoveDirection.CenterTop);
+            });
+            helper.Register(ModifierKeys.Control | ModifierKeys.Alt, Key.O, (_, __) => {
+                SimpleMoveCursor(MoveDirection.RightTop);
+            });
+            helper.Register(ModifierKeys.Control | ModifierKeys.Alt, Key.J, (_, __) => {
+                SimpleMoveCursor(MoveDirection.LeftMiddle);
+            });
+            helper.Register(ModifierKeys.Control | ModifierKeys.Alt, Key.K, (_, __) => {
+                SimpleMoveCursor(MoveDirection.CenterMiddle);
+            });
+            helper.Register(ModifierKeys.Control | ModifierKeys.Alt, Key.L, (_, __) => {
+                SimpleMoveCursor(MoveDirection.RightMiddle);
+            });
+            helper.Register(ModifierKeys.Control | ModifierKeys.Alt, Key.M, (_, __) => {
+                SimpleMoveCursor(MoveDirection.LeftBottom);
+            });
+            helper.Register(ModifierKeys.Control | ModifierKeys.Alt, Key.OemComma, (_, __) => {
+                SimpleMoveCursor(MoveDirection.CenterBottom);
+            });
+            helper.Register(ModifierKeys.Control | ModifierKeys.Alt, Key.OemPeriod, (_, __) => {
+                SimpleMoveCursor(MoveDirection.RightBottom);
+            });
         }
         #endregion
 
@@ -61,13 +89,21 @@ namespace MyMouseController {
         private void MoveCursor(bool isCenter) {
             this._proc.MoveCursor(isCenter);
         }
-    
+
         /// <summary>
         /// カーソルを別のモニタに移動
         /// </summary>
         /// <param name="isRight">ture:右のモニタに移動、false:左のモニタに移動</param>
         private void MoveCursorToOtherScreen(bool isRight) {
             this._proc.MoveCursorToOtherScreen(isRight);
+        }
+
+        /// <summary>
+        /// 画面内のカーソル移動
+        /// </summary>
+        /// <param name="direction">移動箇所</param>
+        private void SimpleMoveCursor(MoveDirection direction) {
+            this._proc.SimpleMoveCursor(direction);
         }
         #endregion
     }

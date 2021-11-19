@@ -11,6 +11,19 @@ namespace MyMouseController {
         #region Declaration
         private readonly object _lock;
         private bool? _disposed;
+        private readonly int offset = 10;
+
+        public enum MoveDirection {
+            LeftTop,
+            LeftMiddle,
+            LeftBottom,
+            CenterTop,
+            CenterMiddle,
+            CenterBottom,
+            RightTop,
+            RightMiddle,
+            RightBottom
+        };
         #endregion
 
 
@@ -103,16 +116,11 @@ namespace MyMouseController {
             }
             Screen screen = isRight ? rightScreen : leftScreen;
 
-            IntPtr window = GetActiveProcess();
             if (_disposed != false) {
                 return;
             }
 
             lock (_lock) {
-                //var rect = new WinApis.Rect();
-                //if (!WinApis.NativeMethods.GetWindowRect(window, ref rect)) {
-                //    return;
-                //}
                 Debug.WriteLine($"Rect {screen.Bounds.Left}:{screen.Bounds.Right}");
 
                 // 既にカーソルがアクティブウィンドウ内にある場合は何もせず
@@ -128,6 +136,78 @@ namespace MyMouseController {
 
                 var x = screen.Bounds.Left + (screen.Bounds.Right - screen.Bounds.Left) / 2;
                 var y = screen.Bounds.Top + (screen.Bounds.Bottom - screen.Bounds.Top) / 2;
+                WinApis.NativeMethods.SetCursorPos(x, 0);
+                WinApis.NativeMethods.SetCursorPos(x, y);
+                System.Diagnostics.Debug.WriteLine($"Move Center x;{x}, y:{y}");
+            }
+        }
+
+        /// <summary>
+        /// 画面の特定の位置にカーソルを移動する
+        /// </summary>
+        /// <param name="direction"></param>
+        public void SimpleMoveCursor(MoveDirection direction) {
+
+            lock (_lock) {
+                // カーソルのある画面を取得
+                Screen targetScreen = null;
+                foreach (var screen in Screen.AllScreens) {
+                    if (WinApis.NativeMethods.GetCursorPos(out POINT pt)) {
+                        System.Diagnostics.Debug.WriteLine($"Mouse Pos {pt.X}:{pt.Y}");
+
+                        if (screen.Bounds.Left <= pt.X && pt.X <= screen.Bounds.Right &&
+                            screen.Bounds.Top <= pt.Y && pt.Y <= screen.Bounds.Bottom) {
+                            targetScreen = screen;
+                            break;
+                        }
+                    }
+                }
+
+                if (null == targetScreen) {
+                    return;
+                }
+
+                int x = 0;
+                     int y = 0;
+                switch(direction) {
+                    case MoveDirection.LeftTop:
+                        x = 0;
+                        y = 0;
+                        break;
+                    case MoveDirection.LeftMiddle:
+                        x = 0;
+                        y = targetScreen.Bounds.Height / 2;
+                        break;
+                    case MoveDirection.LeftBottom:
+                        x = 0;
+                        y = targetScreen.Bounds.Height - offset;
+                        break;
+                    case MoveDirection.CenterTop:
+                        x = targetScreen.Bounds.Width / 2;
+                        y = 0;
+                        break;
+                    case MoveDirection.CenterMiddle:
+              x = targetScreen.Bounds.Width / 2;
+                        y = targetScreen.Bounds.Height / 2;
+                        break;
+                    case MoveDirection.CenterBottom:
+                        x = targetScreen.Bounds.Width / 2;
+                        y = targetScreen.Bounds.Height - offset;
+                        break;
+                    case MoveDirection.RightTop:
+                        x = targetScreen.Bounds.Width - offset;
+                        y = 0;
+                        break;
+                    case MoveDirection.RightMiddle:
+                        x = targetScreen.Bounds.Width - offset;
+                        y = targetScreen.Bounds.Height / 2;
+                        break;
+                    case MoveDirection.RightBottom:
+                        x = targetScreen.Bounds.Width - offset;
+                        y = targetScreen.Bounds.Height - offset;
+                        break;
+                }
+
                 WinApis.NativeMethods.SetCursorPos(x, 0);
                 WinApis.NativeMethods.SetCursorPos(x, y);
                 System.Diagnostics.Debug.WriteLine($"Move Center x;{x}, y:{y}");
