@@ -41,6 +41,9 @@ namespace MyMouseController {
 
             [DllImport("user32.dll")]
             public static extern int GetWindowThreadProcessId(IntPtr hWnd, out int lpdwProcessId);
+
+            [DllImport("USER32.dll", CallingConvention = CallingConvention.StdCall)]
+            public static extern void mouse_event(int dwFlags, int dx, int dy, int cButtons, int dwExtraInfo);
         }
 
         public delegate void SetWinEventHookDelegate(IntPtr hook, SetWinEventHookEventType eventType,
@@ -69,6 +72,9 @@ namespace MyMouseController {
             WINEVENT_SKIPOWNPROCESS = 0x2,
             WINEVENT_INCONTEXT = 0x4
         }
+
+        public const int MOUSEEVENTF_LEFTDOWN = 0x2;
+        public const int MOUSEEVENTF_LEFTUP = 0x4;
 
         public enum SetWinEventHookStandardObjectId : int {
             OBJID_SELF = 0,

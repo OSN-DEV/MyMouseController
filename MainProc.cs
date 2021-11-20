@@ -213,6 +213,14 @@ namespace MyMouseController {
                 System.Diagnostics.Debug.WriteLine($"Move Center x;{x}, y:{y}");
             }
         }
+
+        /// <summary>
+        /// マウスの左クリックイベントを発生させる
+        /// </summary>
+        public void MouseClick() {
+            WinApis.NativeMethods.mouse_event(MOUSEEVENTF_LEFTDOWN, 0, 0, 0, 0);
+            WinApis.NativeMethods.mouse_event(MOUSEEVENTF_LEFTUP, 0, 0, 0, 0);
+        }
         #endregion
 
         #region Private Method

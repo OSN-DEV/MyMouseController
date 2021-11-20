@@ -78,6 +78,9 @@ namespace MyMouseController {
             helper.Register(ModifierKeys.Control | ModifierKeys.Alt, Key.OemPeriod, (_, __) => {
                 SimpleMoveCursor(MoveDirection.RightBottom);
             });
+            helper.Register(ModifierKeys.Control | ModifierKeys.Alt, Key.N, (_, __) => {
+                this._proc.MouseClick();
+            });
         }
         #endregion
 

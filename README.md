@@ -14,3 +14,4 @@
 * Ctrl + ALt + O :  画面右上
 * Ctrl + ALt + L :  画面右中央
 * Ctrl + ALt + . :  画面右下
+* Ctrl + Alt + N : 左クリック
