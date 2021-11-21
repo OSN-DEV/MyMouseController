@@ -171,39 +171,39 @@ namespace MyMouseController {
                      int y = 0;
                 switch(direction) {
                     case MoveDirection.LeftTop:
-                        x = 0;
+                        x = 0 + targetScreen.Bounds.Left;
                         y = 0;
                         break;
                     case MoveDirection.LeftMiddle:
-                        x = 0;
+                        x = 0 + targetScreen.Bounds.Left;
                         y = targetScreen.Bounds.Height / 2;
                         break;
                     case MoveDirection.LeftBottom:
-                        x = 0;
+                        x = 0 + targetScreen.Bounds.Left;
                         y = targetScreen.Bounds.Height - offset;
                         break;
                     case MoveDirection.CenterTop:
-                        x = targetScreen.Bounds.Width / 2;
+                        x = targetScreen.Bounds.Width / 2 + targetScreen.Bounds.Left;
                         y = 0;
                         break;
                     case MoveDirection.CenterMiddle:
-              x = targetScreen.Bounds.Width / 2;
+                        x = targetScreen.Bounds.Width / 2 + targetScreen.Bounds.Left;
                         y = targetScreen.Bounds.Height / 2;
                         break;
                     case MoveDirection.CenterBottom:
-                        x = targetScreen.Bounds.Width / 2;
+                        x = targetScreen.Bounds.Width / 2 + targetScreen.Bounds.Left;
                         y = targetScreen.Bounds.Height - offset;
                         break;
                     case MoveDirection.RightTop:
-                        x = targetScreen.Bounds.Width - offset;
+                        x = targetScreen.Bounds.Width - offset + targetScreen.Bounds.Left;
                         y = 0;
                         break;
                     case MoveDirection.RightMiddle:
-                        x = targetScreen.Bounds.Width - offset;
+                        x = targetScreen.Bounds.Width - offset + targetScreen.Bounds.Left;
                         y = targetScreen.Bounds.Height / 2;
                         break;
                     case MoveDirection.RightBottom:
-                        x = targetScreen.Bounds.Width - offset;
+                        x = targetScreen.Bounds.Width - offset + targetScreen.Bounds.Left;
                         y = targetScreen.Bounds.Height - offset;
                         break;
                 }
