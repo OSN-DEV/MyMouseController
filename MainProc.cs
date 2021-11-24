@@ -11,7 +11,7 @@ namespace MyMouseController {
         #region Declaration
         private readonly object _lock;
         private bool? _disposed;
-        private readonly int offset = 10;
+        private readonly int offset = 30;
 
         public enum MoveDirection {
             LeftTop,
@@ -25,7 +25,6 @@ namespace MyMouseController {
             RightBottom
         };
         #endregion
-
 
         #region IDisposable
         public void Dispose() {
@@ -171,20 +170,20 @@ namespace MyMouseController {
                      int y = 0;
                 switch(direction) {
                     case MoveDirection.LeftTop:
-                        x = 0 + targetScreen.Bounds.Left;
-                        y = 0;
+                        x = 0 + targetScreen.Bounds.Left + offset;
+                        y = 0 + offset;
                         break;
                     case MoveDirection.LeftMiddle:
-                        x = 0 + targetScreen.Bounds.Left;
+                        x = 0 + targetScreen.Bounds.Left + offset;
                         y = targetScreen.Bounds.Height / 2;
                         break;
                     case MoveDirection.LeftBottom:
-                        x = 0 + targetScreen.Bounds.Left;
+                        x = 0 + targetScreen.Bounds.Left + offset;
                         y = targetScreen.Bounds.Height - offset;
                         break;
                     case MoveDirection.CenterTop:
                         x = targetScreen.Bounds.Width / 2 + targetScreen.Bounds.Left;
-                        y = 0;
+                        y = 0 + offset;
                         break;
                     case MoveDirection.CenterMiddle:
                         x = targetScreen.Bounds.Width / 2 + targetScreen.Bounds.Left;
@@ -196,7 +195,7 @@ namespace MyMouseController {
                         break;
                     case MoveDirection.RightTop:
                         x = targetScreen.Bounds.Width - offset + targetScreen.Bounds.Left;
-                        y = 0;
+                        y = 0 + offset;
                         break;
                     case MoveDirection.RightMiddle:
                         x = targetScreen.Bounds.Width - offset + targetScreen.Bounds.Left;
